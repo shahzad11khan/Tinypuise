@@ -1,42 +1,29 @@
 // /api/graphql.js
-
-import { ApolloServer } from 'apollo-server-vercel'; // Using Vercel-specific Apollo server
+import { ApolloServer } from 'apollo-server-micro';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import typeDefs from './schema/typeDefs'; // Adjust path if necessary
-import resolvers from './schema/resolvers'; // Adjust path if necessary
+import typeDefs from '../schema/typeDefs';
+import resolvers from '../schema/resolvers';
 
+// Load environment variables
 dotenv.config();
 
-let isConnected = false; // MongoDB connection tracking
+// Set up MongoDB connection
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-// MongoDB connection handling for serverless
-const connectToDatabase = async () => {
-  if (isConnected) return; // If already connected, do nothing
-  try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    isConnected = true;
-    console.log('Connected to MongoDB');
-  } catch (err) {
-    console.error('Error connecting to MongoDB', err);
-  }
+// Initialize Apollo Server
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+// Apollo Server setup for serverless
+export const config = {
+  api: {
+    bodyParser: false, // Vercel requires body parser to be disabled
+  },
 };
 
-const handler = async (req, res) => {
-  // Ensure MongoDB connection
-  await connectToDatabase();
-
-  // Set up Apollo Server
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-  });
-
-  await server.start();
-  return server.createHandler({ path: "/api/graphql" })(req, res);
-};
-
-export default handler;
+export default server.createHandler({ path: '/api/graphql' });
