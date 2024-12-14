@@ -8,19 +8,22 @@ const babyInfoTypeDef = gql`
 
   type Mutation {
     addBabyInfo(
-      Im: String!
-      babyName: String!
-      babyDateOfBirth: String!
-      heightInCm: Float!
-      weightInKg: Float!
-    ): BabyInfo
-    updateBabyInfo(
-      id: ID!
       Im: String
       babyName: String
       babyDateOfBirth: String
       heightInCm: Float
       weightInKg: Float
+    ): BabyInfo
+
+    updateBabyInfo(
+      id: ID
+      Im: String
+      babyName: String
+      babyDateOfBirth: String
+      heightInCm: Float
+      weightInKg: Float
+      parentName: String
+      parentId: ID
     ): BabyInfo
     deleteBabyInfo(id: ID!): String
   }
@@ -32,6 +35,8 @@ const babyInfoTypeDef = gql`
     babyDateOfBirth: String
     heightInCm: Float
     weightInKg: Float
+    parentName: String
+    parentId: ID
   }
 `;
 

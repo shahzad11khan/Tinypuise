@@ -1,0 +1,67 @@
+
+Register api using graphql
+
+mutation {
+  register(name: "forserver1", email: "forserver1@example.com", password: "forserver1", confirmPassword: "forserver1") {
+    id
+    name
+    email
+  }
+}
+
+using json
+
+{
+  "query": "mutation { register(name: \"for server\", email: \"forserver@example.com\", password: \"forserver\", confirmPassword: \"forserver\") { id name email } }"
+}
+
+
+Login api using graphql 
+
+mutation {
+  login(email: "hi@example.com", password: "123456") {
+    token
+    user {
+      id
+      name
+      email
+    }
+  }
+}
+
+using json 
+
+{
+  "query": "mutation { login(email: \"hi@example.com\", password: \"123456\") { token user { id name email } } }"
+}
+
+Register baby using graphql
+
+mutation {
+  addBabyInfo(
+    babyName: "serverbaby",
+    babyDateOfBirth: "2024-01-01",
+    heightInCm: 50,
+    weightInKg: 3.5
+  ) {
+    babyName
+    babyDateOfBirth
+    heightInCm
+    weightInKg
+    parentName
+    parentId
+  }
+}
+
+using json
+
+{
+  "query": "mutation { addBabyInfo(babyName: \"Baby John\", babyDateOfBirth: \"2023-01-01\", heightInCm: 50, weightInKg: 3.5) { babyName babyDateOfBirth heightInCm weightInKg parentName parentId } }"
+}
+
+show all babies for login parent 
+
+{
+  "query": "query { babyInfos { babyName babyDateOfBirth heightInCm weightInKg parentName parentId } }"
+}
+

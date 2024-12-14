@@ -3,24 +3,21 @@ const mongoose = require('mongoose');
 const babyInfoSchema = new mongoose.Schema({
   Im: {
     type: String,
-    required: true, 
   },
   babyName: {
     type: String,
-    required: true,
   },
   babyDateOfBirth: {
-    type: Date,
-    required: true,
+    type: String,
   },
   heightInCm: {
-    type: Number,
-    required: true,
+    type: String,
   },
   weightInKg: {
-    type: Number,
-    required: true,
+    type: String,
   },
+  parentName: { type: String, required: true },
+  parentId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 const BabyInfo = mongoose.model('BabyInfo', babyInfoSchema);
