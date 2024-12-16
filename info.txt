@@ -65,3 +65,10 @@ show all babies for login parent
   "query": "query { babyInfos { babyName babyDateOfBirth heightInCm weightInKg parentName parentId } }"
 }
 
+add babyInfo  using image 
+
+{
+  "query": "mutation { addBabyInfo(babyName: \"John\", babyDateOfBirth: \"2024-12-16\", heightInCm: 50, weightInKg: 3.5, imageFile: \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShlTK_TvAgDQjUO4STcLAEyxZ4t6-epOItQA&s\" ) { id babyName babyDateOfBirth heightInCm weightInKg image { url publicId } } }"
+}
+
+
