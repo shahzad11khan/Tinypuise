@@ -2,8 +2,9 @@ const { gql } = require('apollo-server-express');
 
 const babyInfoTypeDef = gql`
   type Query {
-    babyInfos: [BabyInfo]
-    getBabyInfo(id: ID!): BabyInfo
+    allBabyInfos: [BabyInfo] # Fetches all BabyInfo records
+  babyInfo(id: ID!): BabyInfo # Fetches a single BabyInfo by ID
+  myBabyInfos: [BabyInfo] # Fetches BabyInfo records specific to the authenticated user
   }
 
   type Mutation {

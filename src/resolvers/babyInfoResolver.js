@@ -3,21 +3,21 @@ const authenticate = require("../middleware/auth");
 
 const babyInfoResolver = {
   Query: {
-    babyInfos:async ()=> {
+    allBabyInfos:async ()=> {
       try {
         return await BabyInfo.find();
       } catch (error) {
         throw new Error('Error fetching baby information');
       }
     },
-    babyInfoo: async (_, { id }) => {
+    babyInfo: async (_, { id }) => {
       try {
         return await BabyInfo.findById(id);
       } catch (error) {
         throw new Error('Baby information not found');
       }
     },
-    babyInfos: authenticate(async (parent, args, context) => {
+    myBabyInfos: authenticate(async (parent, args, context) => {
       try {
         const { user } = context; // Retrieve the authenticated user from the context
         const parentId = user.userId; // Assuming `userId` is available in the context
