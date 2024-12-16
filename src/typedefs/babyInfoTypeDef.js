@@ -2,14 +2,14 @@ const { gql } = require('apollo-server-express');
 
 const babyInfoTypeDef = gql`
   type Query {
-    allBabyInfos: [BabyInfo] # Fetches all BabyInfo records
-  babyInfo(id: ID!): BabyInfo # Fetches a single BabyInfo by ID
-  myBabyInfos: [BabyInfo] # Fetches BabyInfo records specific to the authenticated user
+    allBabyInfos: [BabyInfo]  # Fetches all BabyInfo records
+    babyInfo(id: ID!): BabyInfo  # Fetches a single BabyInfo by ID
+    myBabyInfos: [BabyInfo]  # Fetches BabyInfo records specific to the authenticated user
   }
 
   type Mutation {
     addBabyInfo(
-      Im: String
+      imageFile: String
       babyName: String
       babyDateOfBirth: String
       heightInCm: Float
@@ -18,20 +18,24 @@ const babyInfoTypeDef = gql`
 
     updateBabyInfo(
       id: ID
-      Im: String
+      imageFile: String
       babyName: String
       babyDateOfBirth: String
       heightInCm: Float
       weightInKg: Float
-      parentName: String
-      parentId: ID
     ): BabyInfo
+
     deleteBabyInfo(id: ID!): String
+  }
+
+  type Image {
+    url: String
+    publicId: String
   }
 
   type BabyInfo {
     id: ID
-    Im: String
+    image: Image
     babyName: String
     babyDateOfBirth: String
     heightInCm: Float
