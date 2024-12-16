@@ -1,3 +1,4 @@
+Base_URL : https://tinypuise.vercel.app/graphql
 
 Register api using graphql
 
