@@ -80,4 +80,11 @@ baby id come from the selected baby
 }
 
 
+add daiper change json
+baby id come from the selected baby
+{
+  "query": "mutation { addDiaper(babyId: \"60f5d1b8c3f3d1a5b1f3d3b1\", babyName: \"John Doe\", diaperTime: \"2024-12-20T08:00:00Z\", diaperType: \"Solid\", diaperDate: \"2024-12-20\") { babyId babyName diaperDate diaperTime diaperType  parentName parentId } }"
+}
+
+
 
