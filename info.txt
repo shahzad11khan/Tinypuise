@@ -73,3 +73,11 @@ add babyInfo  using image
 }
 
 
+add feeding using json 
+baby id come from the selected baby
+{
+  "query": "mutation { addFeeding(babyId: \"60f5d1b8c3f3d1a5b1f3d3b1\", babyName: \"John Doe\", feedingTime: \"2024-12-20T08:00:00Z\", amountInMl: 150, feedingType: \"Nursing\", beginTime: \"2024-12-20T08:00:00Z\", startTime: \"2024-12-20T08:00:00Z\", date: \"2024-12-20\", endTime: \"2024-12-20T08:30:00Z\", stopwatchTime: \"00:30:00\") { babyId babyName feedingTime amountInMl feedingType beginTime startTime date endTime stopwatchTime parentName parentId } }"
+}
+
+
+
