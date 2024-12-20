@@ -6,8 +6,8 @@ const sleepTypeDef = gql`
     babyId: ID
     babyName: String
     sleepDate: String
-    beginTime: String
     startTime: String
+    endTime: String
     stopwatchTime: String
     sleepTime: String
     parentName: String
@@ -18,8 +18,8 @@ const sleepTypeDef = gql`
     babyId: ID!
     babyName: String
     sleepDate: String
-    beginTime: String
     startTime: String
+    endTime: String
     stopwatchTime: String
     sleepTime: String
   }
@@ -31,13 +31,13 @@ const sleepTypeDef = gql`
 
   type Mutation {
     addSleep(
-      babyId: ID!
-      babyName: String
-      sleepDate: String
-      beginTime: String
-      startTime: String
-      stopwatchTime: String
-      sleepTime: String
+    babyId: ID!
+    babyName: String
+    sleepDate: String
+    startTime: String
+    endTime: String
+    stopwatchTime: String
+    sleepTime: String
     ): Sleep
 
     updateSleep(id: ID!, sleepInput: SleepInput): Sleep
