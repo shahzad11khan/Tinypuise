@@ -6,8 +6,8 @@ const growthSchema = new mongoose.Schema({
   date: { type: String },
   weight : {type:String},
   heightInCm : {type:String},
-   parentName: { type: String, required: true },
-    parentId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  parentName: { type: String, required: true },
+  parentId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 const Growth = mongoose.model('Growth', growthSchema);

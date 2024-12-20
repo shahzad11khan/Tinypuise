@@ -91,6 +91,12 @@ baby id come from the selected baby
 {
   "query": "mutation { addSleep(babyId: \"60f5d1b8c3f3d1a5b1f3d3b1\", babyName: \"John Doe\", sleepDate: \"2024-12-20\", startTime: \"2024-12-20T01:00:00Z\", endTime: \"2024-12-20T10:00:00Z\", stopwatchTime: \"00:30:00\", sleepTime: \"Neight\") { babyId babyName sleepDate startTime endTime stopwatchTime sleepTime parentName parentId } }"
 }
+add growth change json
+baby id come from the selected baby
 
+
+{
+  "query": "mutation { addGrowth(babyId: \"60f5d1b8c3f3d1a5b1f3d3b1\", babyName: \"John Doe\", date: \"2024-12-20\", weight: \"12 Kg\", heightInCm: \"20 cm\") { babyId babyName date weight heightInCm  parentName parentId } }"
+}
 
 
