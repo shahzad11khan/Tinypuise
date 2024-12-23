@@ -129,7 +129,7 @@ const babyInfoResolver = {
 
   Mutation: {
     addBabyInfo: authenticate(async (parent, args, context) => {
-      const { imageFile, babyName, babyDateOfBirth, heightInCm, weightInKg } = args;
+      const { imageFile, babyName,gender, babyDateOfBirth, heightInCm, weightInKg } = args;
 
       let image = {};
       // Upload the image to Cloudinary (if provided)
@@ -157,6 +157,7 @@ const babyInfoResolver = {
         image, // Store image details
         babyName,
         babyDateOfBirth,
+              gender,
         heightInCm,
         weightInKg,
         parentName: user.parentName,
