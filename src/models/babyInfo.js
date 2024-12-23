@@ -16,6 +16,9 @@ const babyInfoSchema = new mongoose.Schema({
   weightInKg: {
     type: String,
   },
+  gender: {
+    type: String,
+  },
   image: {
     url: {
       type: String, // URL of the image stored in Cloudinary
