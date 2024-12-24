@@ -76,7 +76,7 @@ const resolvers = {
         throw new Error('Invalid email or password');
       }
 
-      const token = jwt.sign({ userId: user.id,parentName: user.name,email: user.email  }, JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.id,parentName: user.name,email: user.email  }, JWT_SECRET, { expiresIn: '6m' });
       return {
         token,
         user,
