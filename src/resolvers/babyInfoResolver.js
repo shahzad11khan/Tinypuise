@@ -129,11 +129,16 @@ const babyInfoResolver = {
 
   Mutation: {
     addBabyInfo: authenticate(async (parent, args, context) => {
-      const { imageFile, babyName, babyDateOfBirth, heightInCm, weightInKg } = args;
+      const { imageFile, babyName,gender, babyDateOfBirth, heightInCm, weightInKg } = args;
 
       let image = {};
       // Upload the image to Cloudinary (if provided)
-      if (imageFile) {
+            if(!imageFile){
+                     image = {
+            url: "https://png.pngtree.com/thumb_back/fh260/background/20230617/pngtree-cute-baby-blue-eyes-girls-wallpapers-image_2948599.jpg", // Image URL from Cloudinary
+            publicId: null , // Public ID for Cloudinary image
+          };
+            }else {
         try {
           const uploadResult = await uploadToCloudinary(imageFile);
           image = {
@@ -157,6 +162,7 @@ const babyInfoResolver = {
         image, // Store image details
         babyName,
         babyDateOfBirth,
+         gender,
         heightInCm,
         weightInKg,
         parentName: user.parentName,

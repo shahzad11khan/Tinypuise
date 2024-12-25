@@ -14,6 +14,7 @@ const babyInfoTypeDef = gql`
       babyDateOfBirth: String
       heightInCm: Float
       weightInKg: Float
+      gender:String
     ): BabyInfo
 
     updateBabyInfo(
@@ -23,6 +24,7 @@ const babyInfoTypeDef = gql`
       babyDateOfBirth: String
       heightInCm: Float
       weightInKg: Float
+      gender:String
     ): BabyInfo
 
     deleteBabyInfo(id: ID!): String
@@ -40,6 +42,7 @@ const babyInfoTypeDef = gql`
     babyDateOfBirth: String
     heightInCm: Float
     weightInKg: Float
+    gender:String
     parentName: String
     parentId: ID
   }

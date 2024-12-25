@@ -5,7 +5,7 @@ const diaperSchema = new mongoose.Schema({
   babyName: { type: String},
   diaperDate: { type: String },
   diaperTime: { type: String },
-  diaperType: { type: String, enum:["Wet","Solid"],default:"" },
+  diaperType: { type: String, enum:["Wet","Soiled"],default:"" },
    parentName: { type: String, required: true },
     parentId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
