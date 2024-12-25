@@ -100,3 +100,17 @@ baby id come from the selected baby
 }
 
 
+{
+  "query": "query getDiapers($babyId: ID!) { getDiapers(babyId: $babyId) { id babyId diaperDate } }",
+  "variables": {
+    "babyId": "passuserselectbabyid"
+  }
+}
+getFeedings -- > same as like the getdiapers
+ getGrowths ---> same 
+getSleeps --- > same
+
+
+
+
+
