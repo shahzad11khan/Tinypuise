@@ -197,7 +197,7 @@ const babyInfoResolver = {
 
         // Upload the new image
         try {
-          const uploadResult = await uploadToCloudinary(imageFile, 'baby_images');
+          const uploadResult = await uploadToCloudinary(imageFile);
           updates.image = {
             url: uploadResult.secure_url,
             publicId: uploadResult.public_id,
