@@ -140,7 +140,10 @@ const babyInfoResolver = {
           };
             }else {
         try {
-          const uploadResult = await uploadToCloudinary(imageFile);
+
+ const fileBuffer = Buffer.from(imageFile.split(',')[1], 'base64');
+const fileType = imageFile.match(/data:image\/(\w+);base64/)[1];
+          const uploadResult = await uploadToCloudinary(fileBuffer,`image.${fileType}`);
           image = {
             url: uploadResult.secure_url, // Image URL from Cloudinary
             publicId: uploadResult.public_id, // Public ID for Cloudinary image
