@@ -26,10 +26,14 @@
 
 const cloudinary = require('cloudinary').v2;
 
-const uploadToCloudinary = async (fileBuffer) => {
+const uploadToCloudinary = async (fileBuffer, fileName) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
-      { resource_type: 'auto' },
+      {
+        resource_type: 'auto',
+        public_id: fileName, // Specify the file name
+        format: fileName.split('.').pop(), // Ensure the correct extension
+      },
       (error, result) => {
         if (error) {
           reject('Cloudinary upload failed');
