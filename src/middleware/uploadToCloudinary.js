@@ -31,7 +31,6 @@ const uploadToCloudinary = async (fileBuffer, fileName) => {
     cloudinary.uploader.upload_stream(
       {
         resource_type: 'auto',
-        public_id: fileName, // Specify the file name
         format: fileName.split('.').pop(), // Ensure the correct extension
       },
       (error, result) => {
