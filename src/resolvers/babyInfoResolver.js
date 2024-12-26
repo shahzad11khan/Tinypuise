@@ -2,6 +2,7 @@
 const BabyInfo = require('../models/babyInfo');
 const authenticate = require("../middleware/auth");
 const {uploadToCloudinary} = require("../middleware/uploadToCloudinary");
+const fs = require('fs');
 
 const babyInfoResolver = {
   Query: {
@@ -37,8 +38,9 @@ const babyInfoResolver = {
   Mutation: {
     addBabyInfo: authenticate(async (parent, args, context) => {
       const { imageFile, babyName,gender, babyDateOfBirth, heightInCm, weightInKg } = args;
-      console.log(imageFile)
-
+      // console.log(imageFile)
+      // const fileExtension = imageFile.match(/\.(\w+)$/)[0];
+      // console.log(fileExtension)
       let image = {};
       // Upload the image to Cloudinary (if provided)
             if(!imageFile){
@@ -48,6 +50,7 @@ const babyInfoResolver = {
           };
             }else {
         try {
+
           const uploadResult = await uploadToCloudinary(imageFile);
           image = {
             url: uploadResult.secure_url, // Image URL from Cloudinary

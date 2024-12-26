@@ -1,45 +1,47 @@
-// const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary').v2;
+// const {v4 : uuidv4} = require('uuid');
 
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET,
-// });
-
-// const uploadToCloudinary = (stream, filename) => {
+// const uploadToCloudinary = async (fileBuffer) => {
+//   // const uniqueId = `${uuidv4()}${fileName}`;
 //   return new Promise((resolve, reject) => {
-//     const uploadStream = cloudinary.uploader.upload(
-//       { resource_type: 'auto', public_id: filename },
+//     const base64String = fileBuffer;
+//     cloudinary.uploader.upload_stream(
+//       {
+//         resource_type: 'auto',
+//         // public_id: uniqueId,
+//       },
 //       (error, result) => {
 //         if (error) {
-//           return reject(error);
+//           reject('Cloudinary upload failed');
+//         } else {
+//           resolve(result);
 //         }
-//         resolve(result);
 //       }
-//     );
-//     stream.pipe(uploadStream);  // Pipe the file stream to Cloudinary
+//     ).end(Buffer.from(base64String, 'base64')); // Send the file buffer to Cloudinary
 //   });
 // };
 
-
-// module.exports = { uploadToCloudinary };
-
-const cloudinary = require('cloudinary').v2;
-
 const uploadToCloudinary = async (fileBuffer) => {
   return new Promise((resolve, reject) => {
+    const base64String = fileBuffer; // Ensure fileBuffer is a base64-encoded string
+
     cloudinary.uploader.upload_stream(
-      { resource_type: 'auto' },
+      {
+        resource_type: 'image',
+      },
       (error, result) => {
         if (error) {
-          reject('Cloudinary upload failed');
+          reject('Cloudinary upload failed: ' + error.message);
         } else {
-          resolve(result);
+          // Logging the result for debugging
+          console.log(result); // Ensure this shows 'secure_url' and 'public_id'
+          resolve(result); // Return the full result with secure_url and public_id
         }
       }
-    ).end(fileBuffer); // Send the file buffer to Cloudinary
+    ).end(Buffer.from(base64String, 'base64')); // Ensure base64 string is correctly handled
   });
 };
+
 
 
 module.exports = { uploadToCloudinary };
