@@ -7,7 +7,7 @@ const sleepSchema = new mongoose.Schema({
   startTime : {type:String},
   endTime : {type:String},
   stopwatchTime: {type:String},
-  sleepTime: { type: String, enum: ['Morning', 'Neight'], default:"" },
+  sleepType: { type: String, enum: ['Morning', 'Night'], default:"" },
   parentName: { type: String, required: true },
   parentId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
