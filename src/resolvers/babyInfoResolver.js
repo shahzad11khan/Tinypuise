@@ -150,16 +150,22 @@ const babyInfoResolver = {
           console.log(babyInfo.image.publicId)
           await deleteFromCloudinary(babyInfo.image.publicId);
         }
-        const uploadResult = await uploadToCloudinary(imageFile);
-        image = {
-          url: uploadResult.secure_url,
-          publicId: uploadResult.public_id,
-        };
+        try {
+
+          const uploadResult = await uploadToCloudinary(imageFile);
+          image = {
+            url: uploadResult.secure_url, // Image URL from Cloudinary
+            publicId: uploadResult.public_id, // Public ID for Cloudinary image
+          };
+        } catch (error) {
+          console.error('Cloudinary Upload Error:', error);
+          throw new Error('Failed to upload image');
+        }
       }
     
       // Update the record in MongoDB
       try {
-        return await BabyInfo.findByIdAndUpdate(id,image, updates, { new: true });
+        return await BabyInfo.findByIdAndUpdate(id, { ...updates, image }, { new: true });
       } catch (error) {
         console.error("Database Update Error:", error);
         throw new Error("Failed to update baby information");
