@@ -136,25 +136,30 @@ const babyInfoResolver = {
 
     updateBabyInfo: authenticate(async (parent, args) => {
       const { id, imageFile, ...updates } = args;
-    // console.log(updates, id, imageFile)
+    
       // Fetch the existing record
       const babyInfo = await BabyInfo.findById(id);
-      console.log("found data : ",babyInfo)
+      console.log("found data : ", babyInfo);
+    
       if (!babyInfo) {
         throw new Error("Baby information not found");
       }
     
+      let image = babyInfo.image || {}; // Ensure image is set even if not changed
+    
       // Handle image updates
       if (imageFile) {
-        if (babyInfo.image.publicId) {
-          console.log(babyInfo.image.publicId)
+        // If there was an old image and it has a publicId, delete it from Cloudinary
+        if (babyInfo.image?.publicId) {
+          console.log(babyInfo.image.publicId);
           await deleteFromCloudinary(babyInfo.image.publicId);
         }
+    
         try {
-
+          // Upload the new image to Cloudinary
           const uploadResult = await uploadToCloudinary(imageFile);
           image = {
-            url: uploadResult.secure_url, // Image URL from Cloudinary
+            url: uploadResult.secure_url,  // Image URL from Cloudinary
             publicId: uploadResult.public_id, // Public ID for Cloudinary image
           };
         } catch (error) {
@@ -165,12 +170,15 @@ const babyInfoResolver = {
     
       // Update the record in MongoDB
       try {
-        return await BabyInfo.findByIdAndUpdate(id, { ...updates, image }, { new: true });
+        // Ensure that the image is included in the update only if a new image is uploaded
+        const updatedBabyInfo = await BabyInfo.findByIdAndUpdate(id, { ...updates, image }, { new: true });
+        return updatedBabyInfo;
       } catch (error) {
         console.error("Database Update Error:", error);
         throw new Error("Failed to update baby information");
       }
     }),
+    
     
     deleteBabyInfo: authenticate(async (parent, { id }) => {
       // Fetch the baby information

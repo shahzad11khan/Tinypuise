@@ -18,17 +18,15 @@ const babyInfoTypeDef = gql`
       gender:String
     ): BabyInfo
 
-    updateBabyInfo(
-      id: ID
-      imageFile: String
-      Im: String
-      babyName: String
-      babyDateOfBirth: String
-      heightInCm: Float
-      weightInKg: Float
-      gender:String
-    ): BabyInfo
-
+      updateBabyInfo(
+    id: ID!
+    imageFile: String
+    babyName: String
+    babyDateOfBirth: String
+    heightInCm: Float
+    weightInKg: Float
+    gender: String
+  ): BabyInfo
     deleteBabyInfo(id: ID!): String
   }
 
