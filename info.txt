@@ -110,6 +110,32 @@ getFeedings -- > same as like the getdiapers
  getGrowths ---> same 
 getSleeps --- > same
 
+update baby record graphql
+
+mutation {
+  updateBabyInfo(
+    id: "64f9c8a1d2d9b1e7f1a3b678",
+    imageFile: "data:image/jpeg;base64,<base64-encoded-image>",
+    updates: {
+      name: "Updated Baby Name",
+      age: 2
+    }
+  ) {
+    id
+    name
+    age
+    image {
+      url
+      publicId
+    }
+  }
+}
+
+use json
+{
+  "query": "mutation { updateBabyInfo(id: \"64f9c8a1d2d9b1e7f1a3b678\", imageFile: \"data:image/jpeg;base64,<base64-encoded-image>\", updates: { name: \"Updated Baby Name\", age: 2 }) { id name age image { url publicId } } }"
+}
+
 
 
 
