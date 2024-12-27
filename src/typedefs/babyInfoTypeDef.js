@@ -10,6 +10,7 @@ const babyInfoTypeDef = gql`
   type Mutation {
     addBabyInfo(
       imageFile: String
+      Im: String
       babyName: String
       babyDateOfBirth: String
       heightInCm: Float
@@ -20,6 +21,7 @@ const babyInfoTypeDef = gql`
     updateBabyInfo(
       id: ID
       imageFile: String
+      Im: String
       babyName: String
       babyDateOfBirth: String
       heightInCm: Float
@@ -38,6 +40,7 @@ const babyInfoTypeDef = gql`
   type BabyInfo {
     id: ID
     image: Image
+    Im : String
     babyName: String
     babyDateOfBirth: String
     heightInCm: Float

@@ -24,7 +24,7 @@ const sleepResolver = {
   },
   Mutation: {
     addSleep: authenticate(async (parent, args, context) => {
-      const { babyId, babyName, sleepDate, startTime, endTime, stopwatchTime, sleepTime } = args;
+      const { babyId, babyName, sleepDate, startTime, endTime, stopwatchTime, sleepType } = args;
       const { user } = context;
 
       if (!user) {
@@ -38,7 +38,7 @@ const sleepResolver = {
         endTime,
         startTime,
         stopwatchTime,
-        sleepTime,
+        sleepType,
         parentName: user.parentName,
         parentId: user.userId,
       });

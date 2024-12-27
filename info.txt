@@ -137,6 +137,10 @@ use json
 }
 
 
+{
+  "query": "mutation { updateBabyInfo(id: \"676e8d6600ff8862bb7e9f09\", imageFile: \"https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D\", babyName: \"Updated Baby Name\", babyDateOfBirth: \"2023-05-01\", heightInCm: 75.5, weightInKg: 8.5, gender: \"Male\") { id image { url publicId } babyName babyDateOfBirth heightInCm weightInKg gender } }"
+}
+
 
 
 

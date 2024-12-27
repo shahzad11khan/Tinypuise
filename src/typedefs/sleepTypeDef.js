@@ -9,7 +9,7 @@ const sleepTypeDef = gql`
     startTime: String
     endTime: String
     stopwatchTime: String
-    sleepTime: String
+    sleepType: String
     parentName: String
     parentId: ID
   }
@@ -21,7 +21,7 @@ const sleepTypeDef = gql`
     startTime: String
     endTime: String
     stopwatchTime: String
-    sleepTime: String
+    sleepType: String
   }
 
   type Query {
@@ -37,7 +37,7 @@ const sleepTypeDef = gql`
     startTime: String
     endTime: String
     stopwatchTime: String
-    sleepTime: String
+    sleepType: String
     ): Sleep
 
     updateSleep(id: ID!, sleepInput: SleepInput): Sleep
