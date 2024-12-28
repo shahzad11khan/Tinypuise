@@ -1,7 +1,7 @@
 
 const BabyInfo = require('../models/babyInfo');
 const authenticate = require("../middleware/auth");
-const {uploadToCloudinary} = require("../middleware/uploadToCloudinary");
+const {uploadToCloudinary,updateimage} = require("../middleware/uploadToCloudinary");
 const {deleteFromCloudinary} = require("../middleware/deleteFromCloudinary");
 const fs = require('fs');
 
@@ -39,9 +39,10 @@ const babyInfoResolver = {
   Mutation: {
     addBabyInfo: authenticate(async (parent, args, context) => {
       const { Im, imageFile, babyName,gender, babyDateOfBirth, heightInCm, weightInKg } = args;
-      // console.log(imageFile)
-      // const fileExtension = imageFile.match(/\.(\w+)$/)[0];
-      // console.log(fileExtension)
+
+      if (!babyInfo) {
+        throw new Error('Baby information not found');
+      }
       let image = {};
       // Upload the image to Cloudinary (if provided)
             if(!imageFile){
@@ -68,8 +69,17 @@ const babyInfoResolver = {
       if (!user) {
         throw new Error('Authentication required');
       }
+      const babyInfo = await BabyInfo.findOne({
+        $and: [
+          { babyName: babyName },
+          { parentName: user.parentName } // Assuming parentName is a variable holding the parent's name
+        ]
+      });    
 
-      // Create a new BabyInfo record in MongoDB
+      if (babyInfo) {
+        throw new Error('Baby information with the same name already exists');
+      }
+      
       const newBabyInfo = new BabyInfo({
         image, // Store image details
         babyName,
@@ -90,7 +100,8 @@ const babyInfoResolver = {
       }
     }),
 
-    // updateBabyInfo: authenticate(async (parent, { id, imageFile, ...updates }) => {
+    // updateBabyInfo: authenticate(async (parent, args, context) => {
+    //   const { Im, imageFile, babyName,gender, babyDateOfBirth, heightInCm, weightInKg } = args;
     //   // Fetch the existing record
     //   console.log(id)
     //   console.log(updates)
@@ -114,7 +125,7 @@ const babyInfoResolver = {
 
     //     // Upload the new image
     //     try {
-    //       const uploadResult = await uploadToCloudinary(imageFile);
+    //       const uploadResult = await uploadImage(imageFile);
     //       updates.image = {
     //         url: uploadResult.secure_url,
     //         publicId: uploadResult.public_id,
@@ -133,53 +144,61 @@ const babyInfoResolver = {
     //     throw new Error('Failed to update baby information');
     //   }
     // }),
+    updateBabyInfo: authenticate(async (parent, args, context) => {
+      const { id, imageFile, babyName, gender, babyDateOfBirth, heightInCm, weightInKg } = args;
 
-    updateBabyInfo: authenticate(async (parent, args) => {
-      const { id, imageFile, ...updates } = args;
+      // Ensure the user is authenticated
     
       // Fetch the existing record
       const babyInfo = await BabyInfo.findById(id);
-      console.log("found data : ", babyInfo);
-    
       if (!babyInfo) {
-        throw new Error("Baby information not found");
+        throw new Error('Baby information not found');
       }
     
-      let image = babyInfo.image || {}; // Ensure image is set even if not changed
+      // Prepare the update object
+      const updates = {};
     
-      // Handle image updates
+      // If any of the fields are provided, add them to the update object
+      if (babyName) updates.babyName = babyName;
+      if (gender) updates.gender = gender;
+      if (babyDateOfBirth) updates.babyDateOfBirth = babyDateOfBirth;
+      if (heightInCm) updates.heightInCm = heightInCm;
+      if (weightInKg) updates.weightInKg = weightInKg;
+    
+      // If a new image is provided, upload it to Cloudinary
       if (imageFile) {
-        // If there was an old image and it has a publicId, delete it from Cloudinary
-        if (babyInfo.image?.publicId) {
-          console.log(babyInfo.image.publicId);
-          await deleteFromCloudinary(babyInfo.image.publicId);
+        // Delete the old image from Cloudinary (if exists)
+        if (babyInfo.image && babyInfo.image.publicId) {
+          try {
+            await deleteFromCloudinary(babyInfo.image.publicId);
+          } catch (error) {
+            console.error('Failed to delete old image from Cloudinary:', error);
+          }
         }
     
+        // Upload the new image
         try {
-          // Upload the new image to Cloudinary
-          const uploadResult = await uploadToCloudinary(imageFile);
-          image = {
-            url: uploadResult.secure_url,  // Image URL from Cloudinary
-            publicId: uploadResult.public_id, // Public ID for Cloudinary image
+          const uploadResult = await updateimage(imageFile);
+          updates.image = {
+            url: uploadResult.secure_url,
+            publicId: uploadResult.public_id,
           };
         } catch (error) {
           console.error('Cloudinary Upload Error:', error);
-          throw new Error('Failed to upload image');
+          throw new Error('Failed to upload new image');
         }
       }
     
-      // Update the record in MongoDB
       try {
-        // Ensure that the image is included in the update only if a new image is uploaded
-        const updatedBabyInfo = await BabyInfo.findByIdAndUpdate(id, { ...updates, image }, { new: true });
-        return updatedBabyInfo;
+        // Update the record in MongoDB
+        return await BabyInfo.findByIdAndUpdate(id, updates, { new: true });
       } catch (error) {
-        console.error("Database Update Error:", error);
-        throw new Error("Failed to update baby information");
+        console.error('Database Update Error:', error);
+        throw new Error('Failed to update baby information');
       }
     }),
     
-    
+ 
     deleteBabyInfo: authenticate(async (parent, { id }) => {
       // Fetch the baby information
       const babyInfo = await BabyInfo.findById(id);

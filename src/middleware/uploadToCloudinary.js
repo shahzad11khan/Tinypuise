@@ -1,25 +1,4 @@
 const cloudinary = require('cloudinary').v2;
-// const {v4 : uuidv4} = require('uuid');
-
-// const uploadToCloudinary = async (fileBuffer) => {
-//   // const uniqueId = `${uuidv4()}${fileName}`;
-//   return new Promise((resolve, reject) => {
-//     const base64String = fileBuffer;
-//     cloudinary.uploader.upload_stream(
-//       {
-//         resource_type: 'auto',
-//         // public_id: uniqueId,
-//       },
-//       (error, result) => {
-//         if (error) {
-//           reject('Cloudinary upload failed');
-//         } else {
-//           resolve(result);
-//         }
-//       }
-//     ).end(Buffer.from(base64String, 'base64')); // Send the file buffer to Cloudinary
-//   });
-// };
 
 const uploadToCloudinary = async (fileBuffer) => {
   return new Promise((resolve, reject) => {
@@ -29,6 +8,7 @@ const uploadToCloudinary = async (fileBuffer) => {
       {
         resource_type: 'image',
       },
+      
       (error, result) => {
         if (error) {
           reject('Cloudinary upload failed: ' + error.message);
@@ -41,7 +21,23 @@ const uploadToCloudinary = async (fileBuffer) => {
     ).end(Buffer.from(base64String, 'base64')); // Ensure base64 string is correctly handled
   });
 };
+const updateimage = async (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+
+   cloudinary.uploader.upload(fileBuffer, { resource_type: 'image' },(error, result) => {
+      if (error) {
+        reject('Cloudinary upload failed: ' + error.message);
+      } else {
+        console.log(result); // Ensure this shows 'secure_url' and 'public_id'
+        resolve(result); // Return the full result with secure_url and public_id
+      }
+    });
+  });
+  };
 
 
 
-module.exports = { uploadToCloudinary };
+
+
+
+module.exports = { uploadToCloudinary,updateimage };
