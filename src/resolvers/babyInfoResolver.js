@@ -40,10 +40,7 @@ const babyInfoResolver = {
     addBabyInfo: authenticate(async (parent, args, context) => {
       const { Im, imageFile, babyName,gender, babyDateOfBirth, heightInCm, weightInKg } = args;
 
-      if (!babyInfo) {
-        throw new Error('Baby information not found');
-      }
-      let image = {};
+         let image = {};
       // Upload the image to Cloudinary (if provided)
             if(!imageFile){
                      image = {
