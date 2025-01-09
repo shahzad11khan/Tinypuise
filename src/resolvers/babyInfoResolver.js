@@ -1,7 +1,7 @@
 
 const BabyInfo = require('../models/babyInfo');
 const authenticate = require("../middleware/auth");
-const {uploadToCloudinary,updateimage} = require("../middleware/uploadToCloudinary");
+const {uploadToCloudinary} = require("../middleware/uploadToCloudinary");
 const {deleteFromCloudinary} = require("../middleware/deleteFromCloudinary");
 const fs = require('fs');
 
@@ -39,9 +39,7 @@ const babyInfoResolver = {
   Mutation: {
     addBabyInfo: authenticate(async (parent, args, context) => {
       const { Im, imageFile, babyName,gender, babyDateOfBirth, heightInCm, weightInKg } = args;
-
          let image = {};
-      // Upload the image to Cloudinary (if provided)
             if(!imageFile){
                      image = {
             url: "https://png.pngtree.com/thumb_back/fh260/background/20230617/pngtree-cute-baby-blue-eyes-girls-wallpapers-image_2948599.jpg", // Image URL from Cloudinary
@@ -175,7 +173,7 @@ const babyInfoResolver = {
     
         // Upload the new image
         try {
-          const uploadResult = await updateimage(imageFile);
+          const uploadResult = await uploadToCloudinary(imageFile);
           updates.image = {
             url: uploadResult.secure_url,
             publicId: uploadResult.public_id,
