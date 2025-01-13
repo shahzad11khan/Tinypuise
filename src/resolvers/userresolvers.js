@@ -24,15 +24,13 @@ const resolvers = {
 
   Mutation: {
     register: async (_, { name, email, password, confirmPassword,token }) => {
-
-      const ticket = await client.verifyIdToken({
-        idToken: token
-      });
-  
-      const payload = ticket.getPayload();
-      const { email, name } = payload;
-      if (password !== confirmPassword) {
-        throw new Error('Passwords do not match');
+      if(token){
+        const ticket = await client.verifyIdToken({
+          idToken: token
+        })      
+        const payload = ticket.getPayload();
+        email = payload.email;
+        name = payload.name;
       }
 
       const existingUser = await User.findOne({ email });
