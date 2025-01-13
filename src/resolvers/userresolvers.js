@@ -49,7 +49,7 @@ const resolvers = {
       return newUser;
     },
 
-    updateUser: async (_, { id, name, email, password }) => {
+    updateUser: async (_, { id, name, email, password,confirmPassword }) => {
       const user = await User.findById(id);
       if (!user) {
         throw new Error('User not found');
@@ -57,8 +57,9 @@ const resolvers = {
 
       if (name) user.name = name;
       if (email) user.email = email;
+      if (confirmPassword) user.confirmPassword = confirmPassword;
       if (password) {
-        user.password = await bcrypt.hash(password, 10);
+        user.password = await bcrypt.hash(confirmPassword, 10);
       }
 
       await user.save();
