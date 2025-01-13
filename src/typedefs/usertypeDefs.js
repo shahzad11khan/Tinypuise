@@ -11,6 +11,7 @@ const typeDefs = gql`
     updateUser(id: ID!, name: String, email: String, password: String): User
     deleteUser(id: ID!): String
     login(email: String!, password: String!): AuthPayload
+    forgotPassword(email: String!, password: String!,confirmPassword: String!): AuthPayloadRestPassword
   }
 
   type User {
@@ -24,6 +25,11 @@ const typeDefs = gql`
   type AuthPayload {
     token: String
     user: User
+  }
+  type AuthPayloadRestPassword {
+    email: String
+    password:String!
+    confirmPassword:String!
   }
 `;
 

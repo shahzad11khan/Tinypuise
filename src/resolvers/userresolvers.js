@@ -93,6 +93,21 @@ const resolvers = {
         user,
       };
     },
+
+    forgotPassword: async (_, { email , password, confirmPassword }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new Error('No user found with this email');
+      }
+      if(password !== confirmPassword){
+        throw new Error('Passwords do not match');
+      }
+
+      user.password = password;
+      user.confirmPassword = confirmPassword;
+      await user.save();
+    },
+
   },
 };
 
