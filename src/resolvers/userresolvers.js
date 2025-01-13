@@ -2,10 +2,15 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const { OAuth2Client } = require("google-auth-library");
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
+
+const client = new OAuth2Client(
+  "287540115183-ia19hgvs0lgum4b9ufgkiv30g4d2euoq.apps.googleusercontent.com"
+);
 
 const resolvers = {
   Query: {
@@ -18,7 +23,14 @@ const resolvers = {
   },
 
   Mutation: {
-    register: async (_, { name, email, password, confirmPassword }) => {
+    register: async (_, { name, email, password, confirmPassword,token }) => {
+
+      const ticket = await client.verifyIdToken({
+        idToken: token
+      });
+  
+      const payload = ticket.getPayload();
+      const { email, name } = payload;
       if (password !== confirmPassword) {
         throw new Error('Passwords do not match');
       }
