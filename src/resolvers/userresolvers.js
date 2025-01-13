@@ -54,7 +54,10 @@ const resolvers = {
       if (!user) {
         throw new Error('User not found');
       }
-
+      if(password !== confirmPassword){
+        throw new Error('Passwords do not match');
+      } 
+    
       if (name) user.name = name;
       if (email) user.email = email;
       if (confirmPassword) user.confirmPassword = confirmPassword;
