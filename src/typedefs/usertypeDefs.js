@@ -8,7 +8,7 @@ const typeDefs = gql`
 
   type Mutation {
     register(name: String, email: String, password: String, confirmPassword: String , token: String): User
-    updateUser(id: ID!, name: String, email: String, password: String,confirmPassword: String): User
+    updateUser(id: ID!, name: String, email: String, password: String): User
     deleteUser(id: ID!): String
     login(email: String!, password: String!): AuthPayload
     forgotPassword(email: String!, password: String!,confirmPassword: String!): AuthPayloadRestPassword

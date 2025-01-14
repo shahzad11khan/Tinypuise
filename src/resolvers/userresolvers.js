@@ -49,21 +49,18 @@ const resolvers = {
       return newUser;
     },
 
-    updateUser: async (_, { id, name, email, password,confirmPassword }) => {
+    updateUser: async (_, { id, name, email, password }) => {
       const user = await User.findById(id);
       if (!user) {
         throw new Error('User not found');
       }
-      if(password !== confirmPassword){
-        throw new Error('Passwords do not match');
+      if( password && password !== user.confirmPassword){
+        throw new Error('Password Is Incorrect');
       } 
     
       if (name) user.name = name;
       if (email) user.email = email;
-      if (confirmPassword) user.confirmPassword = confirmPassword;
-      if (password) {
-        user.password = await bcrypt.hash(confirmPassword, 10);
-      }
+
 
       await user.save();
       return user;

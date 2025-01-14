@@ -67,7 +67,7 @@ const babyInfoResolver = {
       const babyInfo = await BabyInfo.findOne({
         $and: [
           { babyName: babyName },
-          { parentName: user.parentName } // Assuming parentName is a variable holding the parent's name
+          { email: user.email }
         ]
       });    
 
