@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+ 
   name: {
     type: String,
   },
@@ -14,6 +15,16 @@ const userSchema = new mongoose.Schema({
   confirmPassword: {
     type: String,
   },
+  image: {
+    url: {
+      type: String, // URL of the image stored in Cloudinary
+      required: false,
+    },
+    publicId: {
+      type: String, // Cloudinary public ID for the image
+      required: false,
+    },
+  }
 });
 
 // Hash password before saving to the database

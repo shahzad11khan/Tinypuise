@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const { OAuth2Client } = require("google-auth-library");
+const { uploadToCloudinary } = require('../middleware/uploadToCloudinary');
+const { deleteFromCloudinary } = require('../middleware/deleteFromCloudinary');
 
 dotenv.config();
 
@@ -23,7 +25,26 @@ const resolvers = {
   },
 
   Mutation: {
-    register: async (_, { name, email, password, confirmPassword,token }) => {
+    register: async (_, { imageFile,name, email, password, confirmPassword,token }) => {
+
+      let image = {};
+      if(!imageFile){
+               image = {
+      url: "https://png.pngtree.com/thumb_back/fh260/background/20230617/pngtree-cute-baby-blue-eyes-girls-wallpapers-image_2948599.jpg", // Image URL from Cloudinary
+      publicId: null , // Public ID for Cloudinary image
+    };
+      }else {
+  try {
+    const uploadResult = await uploadToCloudinary(imageFile);
+    image = {
+      url: uploadResult.secure_url, // Image URL from Cloudinary
+      publicId: uploadResult.public_id, // Public ID for Cloudinary image
+    };
+  } catch (error) {
+    console.error('Cloudinary Upload Error:', error);
+    throw new Error('Failed to upload image');
+  }
+}
       if(token){
         const ticket = await client.verifyIdToken({
           idToken: token
@@ -39,6 +60,7 @@ const resolvers = {
       }
 
       const newUser = new User({
+        image,
         name,
         email,
         password,
@@ -49,14 +71,39 @@ const resolvers = {
       return newUser;
     },
 
-    updateUser: async (_, { id, name, email, password }) => {
+    updateUser: async (_, { id,imageFile, name, email, password }) => {
       const user = await User.findById(id);
       if (!user) {
         throw new Error('User not found');
       }
+      if(!password){
+        throw new Error('Password Is Required');
+      }
       if( password && password !== user.confirmPassword){
         throw new Error('Password Is Incorrect');
       } 
+
+      if (imageFile) {
+        // Delete the old image from Cloudinary (if exists)
+        if (babyInfo.image && babyInfo.image.publicId) {
+          try {
+            await deleteFromCloudinary(babyInfo.image.publicId);
+          } catch (error) {
+            console.error('Failed to delete old image from Cloudinary:', error);
+          }
+        }
+         // Upload the new image
+         try {
+          const uploadResult = await uploadToCloudinary(imageFile);
+          updates.image = {
+            url: uploadResult.secure_url,
+            publicId: uploadResult.public_id,
+          };
+        } catch (error) {
+          console.error('Cloudinary Upload Error:', error);
+          throw new Error('Failed to upload new image');
+        }
+      }
     
       if (name) user.name = name;
       if (email) user.email = email;
@@ -71,6 +118,15 @@ const resolvers = {
       if (!user) {
         throw new Error('User not found');
       }
+
+      if (user.image && user.image.publicId) {
+        try {
+          await deleteFromCloudinary(user.image.publicId);
+        } catch (error) {
+          console.error('Failed to delete image from Cloudinary:', error);
+        }
+      }
+
 
       await User.findByIdAndDelete(id);
       return `User with ID: ${id} has been deleted`;

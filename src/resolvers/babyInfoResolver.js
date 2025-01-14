@@ -80,7 +80,7 @@ const babyInfoResolver = {
         babyName,
         Im, 
         babyDateOfBirth,
-         gender,
+        gender,
         heightInCm,
         weightInKg,
         parentName: user.parentName,
