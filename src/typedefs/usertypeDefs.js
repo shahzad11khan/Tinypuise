@@ -20,7 +20,7 @@ const typeDefs = gql`
     email: String!
     password:String!
     confirmPassword:String!
-    imageFile: String
+    imageFile: String!
   }
 
   type AuthPayload {

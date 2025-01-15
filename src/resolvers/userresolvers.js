@@ -95,7 +95,7 @@ const resolvers = {
          // Upload the new image
          try {
           const uploadResult = await uploadToCloudinary(imageFile);
-          updates.image = {
+          user.image = {
             url: uploadResult.secure_url,
             publicId: uploadResult.public_id,
           };
