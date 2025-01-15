@@ -142,5 +142,26 @@ use json
 }
 
 
+update user record
+
+mutation {
+  updateUser(
+    
+    id: "675d7674d0e50b5573179ea8",
+    name: "14",
+    email: "14@gmail.com",
+    password: "forserver1",
+    imageFile:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmCy16nhIbV3pI1qLYHMJKwbH2458oiC9EmA&s"
+  ) {
+    id
+    name
+    email
+    image {
+      url
+      publicId
+    }
+  }
+}
+
 
 
