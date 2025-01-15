@@ -65,11 +65,10 @@ const babyInfoResolver = {
         throw new Error('Authentication required');
       }
       const babyInfo = await BabyInfo.findOne({
-        $and: [
-          { babyName: babyName },
-          { email: user.email }
-        ]
-      });    
+        babyName,
+        email: user.email,
+      });
+         
 
       if (babyInfo) {
         throw new Error('Baby information with the same name already exists');
