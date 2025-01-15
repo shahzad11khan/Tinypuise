@@ -6,6 +6,7 @@ const typeDefs = gql`
     getUser(id: ID!): User
   }
 
+
   type Mutation {
     register(imageFile: String, name: String, email: String, password: String, confirmPassword: String , token: String): User
     updateUser(id: ID!,imageFile: String, name: String, email: String, password: String): User
@@ -14,13 +15,18 @@ const typeDefs = gql`
     forgotPassword(email: String!, password: String!,confirmPassword: String!): AuthPayloadRestPassword
   }
 
+  
+    type Image {
+    url: String
+    publicId: String
+  }
   type User {
     id: ID!
     name: String!
     email: String!
     password:String!
     confirmPassword:String!
-    image: String
+    imageFile: String
   }
 
   type AuthPayload {

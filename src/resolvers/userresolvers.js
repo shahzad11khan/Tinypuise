@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const { OAuth2Client } = require("google-auth-library");
-const { uploadToCloudinary } = require('../middleware/uploadToCloudinary');
+const { uploadToCloudinary} = require('../middleware/uploadToCloudinary');
 const { deleteFromCloudinary } = require('../middleware/deleteFromCloudinary');
 
 dotenv.config();
@@ -96,7 +96,8 @@ const resolvers = {
         }
          // Upload the new image
          try {
-          const uploadResult = await uploadToCloudinary(imageFile);
+          // const uploadResult = await updateimage(imageFile);
+          const uploadResult = await upadloadToCloudinary(imageFile);
           updates.image = {
             url: uploadResult.secure_url,
             publicId: uploadResult.public_id,
@@ -110,10 +111,11 @@ const resolvers = {
       }
       try {
         // Update the record in MongoDB
-        return await user.findByIdAndUpdate(id, updates, { new: true });
+        console.log(updates)
+        // return await User.findByIdAndUpdate(id, updates, { new: true });
       } catch (error) {
         console.error('Database Update Error:', error);
-        throw new Error('Failed to update baby information');
+        throw new Error('Failed to update user information');
       }
     },
 
