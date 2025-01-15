@@ -70,110 +70,50 @@ const resolvers = {
       await newUser.save();
       return newUser;
     },
-
-    // updateUser: async (_, { id,imageFile, name, email, password }) => {
-    //   const user = await User.findById(id);
-    //   if (!user) {
-    //     throw new Error('User not found');
-    //   }
-    //   if(!password){
-    //     throw new Error('Password Is Required');
-    //   }
-    //   if( password && password !== user.confirmPassword){
-    //     throw new Error('Password Is Incorrect');
-    //   } 
-    //   const updates = {};
-    //   if (name) updates.name = name;
-    //   if (email) updates.email = email;
-    //   if (imageFile) {
-    //     // Delete the old image from Cloudinary (if exists)
-    //     if (user.image && user.image.publicId) {
-    //       try {
-    //         await deleteFromCloudinary(user.image.publicId);
-    //       } catch (error) {
-    //         console.error('Failed to delete old image from Cloudinary:', error);
-    //       }
-    //     }
-    //      // Upload the new image
-    //      try {
-    //       const uploadResult = await uploadToCloudinary(imageFile);
-    //       updates.image = {
-    //         url: uploadResult.secure_url,
-    //         publicId: uploadResult.public_id,
-    //       };
-    //     } catch (error) {
-    //       console.error('Cloudinary Upload Error:', error);
-    //       throw new Error('Failed to upload new image');
-    //     }
-    //   }
-    
-  
-
-
-    //   try {
-    //     // Update the record in MongoDB
-    //     return await user.findByIdAndUpdate(id, updates, { new: true });
-    //   } catch (error) {
-    //     console.error('Database Update Error:', error);
-    //     throw new Error('Failed to update baby information');
-    //   }
-    // },
     updateUser: async (_, { id, imageFile, name, email, password }) => {
-      // Find the user by ID
       const user = await User.findById(id);
       if (!user) {
         throw new Error('User not found');
       }
     
-      // Validate password
-      if (!password) {
-        throw new Error('Password is required');
-      }
-      if (password !== user.confirmPassword) { // Ensure confirmPassword is securely stored
+      // Validate password (optional logic here)
+      if (password && password !== user.confirmPassword) {
         throw new Error('Password is incorrect');
       }
     
-      // Initialize updates object
+      // Prepare updates
       const updates = {};
       if (name) updates.name = name;
       if (email) updates.email = email;
     
-      // Handle image file if provided
       if (imageFile) {
-        // Delete the old image from Cloudinary if it exists
+        // Handle new image upload
         if (user.image && user.image.publicId) {
           try {
             await deleteFromCloudinary(user.image.publicId);
           } catch (error) {
             console.error('Failed to delete old image from Cloudinary:', error);
-            throw new Error('Error while deleting old image');
           }
         }
-    
-        // Upload the new image to Cloudinary
-        try {
-          const uploadResult = await uploadToCloudinary(imageFile);
-          updates.image = {
-            url: uploadResult.secure_url,
-            publicId: uploadResult.public_id,
-          };
-        } catch (error) {
-          console.error('Cloudinary Upload Error:', error);
-          throw new Error('Failed to upload new image');
-        }
+        const uploadResult = await uploadToCloudinary(imageFile);
+        updates.image = {
+          url: uploadResult.secure_url,
+          publicId: uploadResult.public_id,
+        };
+      } else {
+        // Ensure existing image is included
+        updates.image = user.image;
       }
     
-      // Update user in the database
-      try {
-        const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
-        if (!updatedUser) {
-          throw new Error('Failed to update user information');
-        }
-        return updatedUser;
-      } catch (error) {
-        console.error('Database Update Error:', error);
-        throw new Error('Failed to update user information');
+      // Update and return the user
+      const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+      if (!updatedUser) {
+        throw new Error('Failed to update user');
       }
+      return {
+        ...updatedUser.toObject(),
+        imageFile: updatedUser.image?.url || '', // Ensure imageFile is always defined
+      };
     },
     
     deleteUser: async (_, { id }) => {
