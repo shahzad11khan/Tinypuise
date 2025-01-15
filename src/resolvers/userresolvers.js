@@ -30,8 +30,8 @@ const resolvers = {
       let image = {};
       if(!imageFile){
                image = {
-      url: "https://png.pngtree.com/thumb_back/fh260/background/20230617/pngtree-cute-baby-blue-eyes-girls-wallpapers-image_2948599.jpg", // Image URL from Cloudinary
-      publicId: null , // Public ID for Cloudinary image
+      url: "https://static.thenounproject.com/png/1559144-200.png", // Image URL from Cloudinary
+      publicId: "1559144-200" , // Public ID for Cloudinary image
     };
       }else {
   try {
@@ -97,7 +97,7 @@ const resolvers = {
          // Upload the new image
          try {
           // const uploadResult = await updateimage(imageFile);
-          const uploadResult = await updateimage(imageFile);
+          const uploadResult = await uploadToCloudinary(imageFile);
           updates.image = {
             url: uploadResult.secure_url,
             publicId: uploadResult.public_id,
