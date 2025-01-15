@@ -30,6 +30,21 @@ mutation {
   }
 }
 
+mutation {
+  login(email: "14@gmail.com", password: "forserver1") {
+    token
+    user {
+      id
+      name
+      email
+       image {
+      url
+      publicId
+    }
+    }
+  }
+}
+
 using json 
 
 {
