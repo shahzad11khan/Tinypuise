@@ -16,7 +16,7 @@ const typeDefs = gql`
   }
 
   
-    type Image {
+  type Image {
     url: String
     publicId: String
   }
@@ -26,7 +26,7 @@ const typeDefs = gql`
     email: String!
     password:String!
     confirmPassword:String!
-    imageFile: String
+    image: Image
   }
 
   type AuthPayload {
