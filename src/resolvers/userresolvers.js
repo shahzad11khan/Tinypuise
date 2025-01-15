@@ -85,9 +85,9 @@ const resolvers = {
 
       if (imageFile) {
         // Delete the old image from Cloudinary (if exists)
-        if (babyInfo.image && babyInfo.image.publicId) {
+        if (user.image && user.image.publicId) {
           try {
-            await deleteFromCloudinary(babyInfo.image.publicId);
+            await deleteFromCloudinary(user.image.publicId);
           } catch (error) {
             console.error('Failed to delete old image from Cloudinary:', error);
           }
