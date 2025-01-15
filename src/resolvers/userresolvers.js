@@ -70,24 +70,23 @@ const resolvers = {
       await newUser.save();
       return newUser;
     },
-    updateUser: async (_, { id, imageFile, name, email, password }) => {
+
+    updateUser: async (_, { id,imageFile, name, email, password }) => {
       const user = await User.findById(id);
       if (!user) {
         throw new Error('User not found');
       }
-    
-      // Validate password (optional logic here)
-      if (password && password !== user.confirmPassword) {
-        throw new Error('Password is incorrect');
+      if(!password){
+        throw new Error('Password Is Required');
       }
-    
-      // Prepare updates
+      if( password && password !== user.confirmPassword){
+        throw new Error('Password Is Incorrect');
+      } 
       const updates = {};
       if (name) updates.name = name;
       if (email) updates.email = email;
-    
       if (imageFile) {
-        // Handle new image upload
+        // Delete the old image from Cloudinary (if exists)
         if (user.image && user.image.publicId) {
           try {
             await deleteFromCloudinary(user.image.publicId);
@@ -95,27 +94,29 @@ const resolvers = {
             console.error('Failed to delete old image from Cloudinary:', error);
           }
         }
-        const uploadResult = await uploadToCloudinary(imageFile);
-        updates.image = {
-          url: uploadResult.secure_url,
-          publicId: uploadResult.public_id,
-        };
-      } else {
-        // Ensure existing image is included
-        updates.image = user.image;
+         // Upload the new image
+         try {
+          const uploadResult = await uploadToCloudinary(imageFile);
+          updates.image = {
+            url: uploadResult.secure_url,
+            publicId: uploadResult.public_id,
+          };
+        } catch (error) {
+          console.error('Cloudinary Upload Error:', error);
+          throw new Error('Failed to upload new image');
+        }
+      }else{
+        updates.image = user.image
       }
-    
-      // Update and return the user
-      const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
-      if (!updatedUser) {
-        throw new Error('Failed to update user');
+      try {
+        // Update the record in MongoDB
+        return await user.findByIdAndUpdate(id, updates, { new: true });
+      } catch (error) {
+        console.error('Database Update Error:', error);
+        throw new Error('Failed to update baby information');
       }
-      return {
-        ...updatedUser.toObject(),
-        imageFile: updatedUser.image?.url || '', // Ensure imageFile is always defined
-      };
     },
-    
+
     deleteUser: async (_, { id }) => {
       const user = await User.findById(id);
       if (!user) {
