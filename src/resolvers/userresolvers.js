@@ -83,6 +83,9 @@ const resolvers = {
       if( password && password !== user.confirmPassword){
         throw new Error('Password Is Incorrect');
       } 
+      if( email && email === user.email){
+        throw new Error('Email Already In Use');
+      } 
       const updates = {};
       if (name) updates.name = name;
       if (email) updates.email = email;
