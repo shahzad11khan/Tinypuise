@@ -83,8 +83,8 @@ const resolvers = {
       if( password && password !== user.confirmPassword){
         throw new Error('Password Is Incorrect');
       } 
-      const FindUserEmail = await User.findOne({ email });
-      if (FindUserEmail) {
+      const FindUserEmail = await User.find();
+      if (FindUserEmail.email === email) {
         throw new Error('Email already exists');
       }
       const updates = {};
