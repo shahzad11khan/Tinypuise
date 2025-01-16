@@ -122,12 +122,9 @@ const resolvers = {
 
     deleteUser: async (_, { id }) => {
       const user = await User.findById(id);
+      console.log(user)
       if (!user) {
         throw new Error('User not found');
-      }
-      const existingBabyInfo = await BabyInfo.deleteMany({ parentId: id });
-      if (existingBabyInfo) {
-        throw new Error('Cannot delete user with associated baby information');
       }
       if (user.image && user.image.publicId) {
         try {
@@ -136,9 +133,10 @@ const resolvers = {
           console.error('Failed to delete image from Cloudinary:', error);
         }
       }
-
-
-      await User.findByIdAndDelete(id);
+      
+      
+      await BabyInfo.deleteMany({ parentId: id });
+      await User.findByIdAndDelete({_id:id});
       return `User with ID: ${id} has been deleted`;
     },
 
