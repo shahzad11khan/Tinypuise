@@ -72,24 +72,83 @@ const resolvers = {
       return newUser;
     },
 
-    updateUser: async (_, { id,imageFile, name, email, password }) => {
+    // updateUser: async (_, { id,imageFile, name, email, password }) => {
+    //   const user = await User.findById(id);
+    //   if (!user) {
+    //     throw new Error('User not found');
+    //   }
+    //   if(!password){
+    //     throw new Error('Password Is Required');
+    //   }
+    //   if( password && password !== user.confirmPassword){
+    //     throw new Error('Password Is Incorrect');
+    //   } 
+    //   const FindUserEmail = await User.find();
+    //   if ( email === FindUserEmail.email ) {
+    //     throw new Error('Email already exists');
+    //   }
+    //   const updates = {};
+    //   if (name) updates.name = name;
+    //   if (email) updates.email = email;
+    //   if (imageFile) {
+    //     // Delete the old image from Cloudinary (if exists)
+    //     if (user.image && user.image.publicId) {
+    //       try {
+    //         await deleteFromCloudinary(user.image.publicId);
+    //       } catch (error) {
+    //         console.error('Failed to delete old image from Cloudinary:', error);
+    //       }
+    //     }
+    //      // Upload the new image
+    //      try {
+    //       // const uploadResult = await updateimage(imageFile);
+    //       const uploadResult = await uploadToCloudinary(imageFile);
+    //       updates.image = {
+    //         url: uploadResult.secure_url,
+    //         publicId: uploadResult.public_id,
+    //       };
+    //     } catch (error) {
+    //       console.error('Cloudinary Upload Error:', error);
+    //       throw new Error('Failed to upload new image');
+    //     }
+    //   }else{
+    //     updates.image = user.image
+    //   }
+    //   try {
+    //     // Update the record in MongoDB
+    //     // console.log(updates)
+    //     return await User.findByIdAndUpdate(id, updates, { new: true });
+    //   } catch (error) {
+    //     console.error('Database Update Error:', error);
+    //     throw new Error('Failed to update user information');
+    //   }
+    // },
+    updateUser: async (_, { id, imageFile, name, email, password }) => {
       const user = await User.findById(id);
       if (!user) {
         throw new Error('User not found');
       }
-      if(!password){
-        throw new Error('Password Is Required');
+    
+      if (!password) {
+        throw new Error('Password is required');
       }
-      if( password && password !== user.confirmPassword){
-        throw new Error('Password Is Incorrect');
-      } 
-      const FindUserEmail = await User.find();
-      if (FindUserEmail.email === email) {
-        throw new Error('Email already exists');
+    
+      if (password && password !== user.confirmPassword) {
+        throw new Error('Password is incorrect');
       }
+    
+      // Check if the email already exists in the database (excluding the current user)
+      if (email) {
+        const existingUserWithEmail = await User.findOne({ email });
+        if (existingUserWithEmail && existingUserWithEmail._id !== id) {
+          throw new Error('Email already in use');
+        }
+      }
+    
       const updates = {};
       if (name) updates.name = name;
       if (email) updates.email = email;
+    
       if (imageFile) {
         // Delete the old image from Cloudinary (if exists)
         if (user.image && user.image.publicId) {
@@ -99,9 +158,9 @@ const resolvers = {
             console.error('Failed to delete old image from Cloudinary:', error);
           }
         }
-         // Upload the new image
-         try {
-          // const uploadResult = await updateimage(imageFile);
+    
+        // Upload the new image
+        try {
           const uploadResult = await uploadToCloudinary(imageFile);
           updates.image = {
             url: uploadResult.secure_url,
@@ -111,19 +170,19 @@ const resolvers = {
           console.error('Cloudinary Upload Error:', error);
           throw new Error('Failed to upload new image');
         }
-      }else{
-        updates.image = user.image
+      } else {
+        updates.image = user.image;
       }
+    
       try {
         // Update the record in MongoDB
-        // console.log(updates)
         return await User.findByIdAndUpdate(id, updates, { new: true });
       } catch (error) {
         console.error('Database Update Error:', error);
         throw new Error('Failed to update user information');
       }
     },
-
+    
     deleteUser: async (_, { id }) => {
       const user = await User.findById(id);
       console.log(user)
