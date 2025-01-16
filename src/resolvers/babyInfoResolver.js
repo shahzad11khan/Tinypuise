@@ -144,12 +144,28 @@ const babyInfoResolver = {
       const { id, imageFile, babyName, gender, babyDateOfBirth, heightInCm, weightInKg } = args;
 
       // Ensure the user is authenticated
-    
+      const { user } = context;
+      if (!user) {
+        throw new Error('Authentication required');
+      }
       // Fetch the existing record
       const babyInfo = await BabyInfo.findById(id);
       if (!babyInfo) {
         throw new Error('Baby information not found');
       }
+
+      const babyInfoForCheck = await BabyInfo.findOne({
+        babyName: babyName,
+        parentId: user.userId,
+        parentName: user.parentName
+     });
+
+        
+
+     if (babyInfoForCheck) {
+       console.log(`Baby information with the same name already exists for user ${user.userId}`);
+       throw new Error('Baby information with the same name already exists');
+     }
     
       // Prepare the update object
       const updates = {};
