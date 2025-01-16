@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const { OAuth2Client } = require("google-auth-library");
 const { uploadToCloudinary ,updateimage} = require('../middleware/uploadToCloudinary');
 const { deleteFromCloudinary } = require('../middleware/deleteFromCloudinary');
+const BabyInfo = require('../models/babyInfo');
 
 dotenv.config();
 
@@ -124,7 +125,10 @@ const resolvers = {
       if (!user) {
         throw new Error('User not found');
       }
-
+      const existingBabyInfo = await BabyInfo.deleteMany({ parentId: id });
+      if (existingBabyInfo) {
+        throw new Error('Cannot delete user with associated baby information');
+      }
       if (user.image && user.image.publicId) {
         try {
           await deleteFromCloudinary(user.image.publicId);
