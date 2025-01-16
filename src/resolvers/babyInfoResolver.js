@@ -140,32 +140,108 @@ const babyInfoResolver = {
     //     throw new Error('Failed to update baby information');
     //   }
     // }),
+    // updateBabyInfo: authenticate(async (parent, args, context) => {
+    //   const { id, imageFile, babyName, gender, babyDateOfBirth, heightInCm, weightInKg } = args;
+
+    //   // Ensure the user is authenticated
+    //   const { user } = context;
+    //   if (!user) {
+    //     throw new Error('Authentication required');
+    //   }
+    //   // Fetch the existing record
+    //   const babyInfo = await BabyInfo.findById(id);
+    //   if (!babyInfo) {
+    //     throw new Error('Baby information not found');
+    //   }
+    //   let babyInfoForCheck ="";
+    //   if(babyName){
+    //      babyInfoForCheck = await BabyInfo.findOne({
+    //       babyName: babyName,
+    //       parentId: user.userId,
+    //       parentName: user.parentName
+    //    });
+    //   }
+    
+
+        
+
+    //  if (babyInfoForCheck) {
+    //    console.log(`Baby information with the same name already exists for user ${user.userId}`);
+    //    throw new Error('Baby information with the same name already exists');
+    //  }
+    
+    //   // Prepare the update object
+    //   const updates = {};
+    
+    //   // If any of the fields are provided, add them to the update object
+    //   if (babyName) updates.babyName = babyName;
+    //   if (gender) updates.gender = gender;
+    //   if (babyDateOfBirth) updates.babyDateOfBirth = babyDateOfBirth;
+    //   if (heightInCm) updates.heightInCm = heightInCm;
+    //   if (weightInKg) updates.weightInKg = weightInKg;
+    
+    //   // If a new image is provided, upload it to Cloudinary
+    //   if (imageFile) {
+    //     // Delete the old image from Cloudinary (if exists)
+    //     if (babyInfo.image && babyInfo.image.publicId) {
+    //       try {
+    //         await deleteFromCloudinary(babyInfo.image.publicId);
+    //       } catch (error) {
+    //         console.error('Failed to delete old image from Cloudinary:', error);
+    //       }
+    //     }
+    
+    //     // Upload the new image
+    //     try {
+    //       const uploadResult = await uploadToCloudinary(imageFile);
+    //       updates.image = {
+    //         url: uploadResult.secure_url,
+    //         publicId: uploadResult.public_id,
+    //       };
+    //     } catch (error) {
+    //       console.error('Cloudinary Upload Error:', error);
+    //       throw new Error('Failed to upload new image');
+    //     }
+    //   }
+    
+    //   try {
+    //     // Update the record in MongoDB
+    //     return await BabyInfo.findByIdAndUpdate(id, updates, { new: true });
+    //   } catch (error) {
+    //     console.error('Database Update Error:', error);
+    //     throw new Error('Failed to update baby information');
+    //   }
+    // }),
+    
     updateBabyInfo: authenticate(async (parent, args, context) => {
       const { id, imageFile, babyName, gender, babyDateOfBirth, heightInCm, weightInKg } = args;
-
+    
       // Ensure the user is authenticated
       const { user } = context;
       if (!user) {
         throw new Error('Authentication required');
       }
+    
       // Fetch the existing record
       const babyInfo = await BabyInfo.findById(id);
       if (!babyInfo) {
         throw new Error('Baby information not found');
       }
-
-      const babyInfoForCheck = await BabyInfo.findOne({
-        babyName: babyName,
-        parentId: user.userId,
-        parentName: user.parentName
-     });
-
-        
-
-     if (babyInfoForCheck) {
-       console.log(`Baby information with the same name already exists for user ${user.userId}`);
-       throw new Error('Baby information with the same name already exists');
-     }
+    
+      let babyInfoForCheck = null;
+      if (babyName && babyName !== babyInfo.babyName) {
+        // Check if the new babyName already exists for the same parent
+        babyInfoForCheck = await BabyInfo.findOne({
+          babyName: babyName,
+          parentId: user.userId,
+          parentName: user.parentName
+        });
+    
+        if (babyInfoForCheck) {
+          console.log(`Baby information with the same name already exists for user ${user.userId}`);
+          throw new Error('Baby information with the same name already exists');
+        }
+      }
     
       // Prepare the update object
       const updates = {};
@@ -201,8 +277,8 @@ const babyInfoResolver = {
         }
       }
     
+      // Update the record in MongoDB
       try {
-        // Update the record in MongoDB
         return await BabyInfo.findByIdAndUpdate(id, updates, { new: true });
       } catch (error) {
         console.error('Database Update Error:', error);
@@ -210,7 +286,6 @@ const babyInfoResolver = {
       }
     }),
     
- 
     deleteBabyInfo: authenticate(async (parent, { id }) => {
       // Fetch the baby information
       const babyInfo = await BabyInfo.findById(id);
