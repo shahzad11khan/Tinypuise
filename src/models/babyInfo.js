@@ -6,6 +6,7 @@ const babyInfoSchema = new mongoose.Schema({
   },
   babyName: {
     type: String,
+    trim: true,
   },
   babyDateOfBirth: {
     type: String,

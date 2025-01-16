@@ -65,12 +65,15 @@ const babyInfoResolver = {
         throw new Error('Authentication required');
       }
       const babyInfo = await BabyInfo.findOne({
-        babyName,
-        email: user.email,
+         babyName: babyName,
+         parentId: user.userId,
+         parentName: user.parentName
       });
+
          
 
       if (babyInfo) {
+        console.log(`Baby information with the same name already exists for user ${user.userId}`);
         throw new Error('Baby information with the same name already exists');
       }
       
@@ -85,7 +88,6 @@ const babyInfoResolver = {
         parentName: user.parentName,
         parentId: user.userId,
       });
-
       try {
         return await newBabyInfo.save(); // Save to database
       } catch (error) {
