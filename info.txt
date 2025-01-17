@@ -51,6 +51,20 @@ using json
   "query": "mutation { login(email: \"hi@example.com\", password: \"123456\") { token user { id name email } } }"
 }
 
+
+get all users
+
+query {
+  users {
+    id
+    name
+    email
+    confirmPassword
+    password
+  }
+}
+
+
 Register baby using graphql
 
 mutation {

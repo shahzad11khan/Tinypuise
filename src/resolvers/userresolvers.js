@@ -140,7 +140,7 @@ const resolvers = {
       // Check if the email already exists in the database (excluding the current user)
       if (email) {
         const existingUserWithEmail = await User.findOne({ email });
-        if (existingUserWithEmail && existingUserWithEmail._id !== id) {
+        if (existingUserWithEmail && existingUserWithEmail.id !== id) {
           throw new Error('Email already in use');
         }
       }
@@ -161,7 +161,8 @@ const resolvers = {
     
         // Upload the new image
         try {
-          const uploadResult = await uploadToCloudinary(imageFile);
+          // const uploadResult = await uploadToCloudinary(imageFile);
+          const uploadResult = await updateimage(imageFile);
           updates.image = {
             url: uploadResult.secure_url,
             publicId: uploadResult.public_id,
