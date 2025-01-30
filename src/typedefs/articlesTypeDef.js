@@ -8,7 +8,7 @@ const typeDefs = gql`
   }
   type Item {
     id: ID!
-    image: Image!
+    image: Image
     title: String!
     description: String!
     mainCategory: String!
