@@ -1,5 +1,5 @@
 const Item = require("../models/article");
-const { uploadToCloudinary } = require('../middleware/uploadToCloudinary');
+const { uploadToCloudinary, updateimage } = require('../middleware/uploadToCloudinary');
 const { deleteFromCloudinary } = require('../middleware/deleteFromCloudinary');
 
 const resolvers = {
@@ -26,7 +26,8 @@ const resolvers = {
                 };
             } else {
                 try {
-                    const uploadResult = await uploadToCloudinary(image);
+                    // const uploadResult = await uploadToCloudinary(image);
+                    const uploadResult = await updateimage(image);
                     image = {
                         url: uploadResult.secure_url, // Image URL from Cloudinary
                         publicId: uploadResult.public_id, // Public ID for Cloudinary image
