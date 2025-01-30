@@ -1,6 +1,7 @@
 const Item = require("../models/article");
 const { uploadToCloudinary } = require('../middleware/uploadToCloudinary');
 const { deleteFromCloudinary } = require('../middleware/deleteFromCloudinary');
+const { addResolversToSchema } = require("@graphql-tools/schema");
 
 const resolvers = {
     Query: {
@@ -17,7 +18,7 @@ const resolvers = {
 
     Mutation: {
         // Add new item
-        addItem: async (_, { imageFile, title, description, mainCategory }) => {
+        addArticle: async (_, { imageFile, title, description, mainCategory }) => {
             let image = {};
             if (!imageFile) {
                 image = {
@@ -42,7 +43,7 @@ const resolvers = {
         },
 
         // Update existing item
-        updateItem: async (_, { id, imageFile, title, description, mainCategory }) => {
+        updateArticle: async (_, { id, imageFile, title, description, mainCategory }) => {
             const user = await Item.findById(id);
             const updates = {};
             if (title) updates.title = title;
@@ -84,7 +85,7 @@ const resolvers = {
         },
 
         // Delete an item
-        deleteItem: async (_, { id }) => {
+        deleteArticle: async (_, { id }) => {
             const user = await Item.findById(id);
             await Item.findByIdAndDelete(id);
             if (user.image && user.image.publicId) {

@@ -8,7 +8,7 @@ const typeDefs = gql`
   }
   type Item {
     id: ID!
-    image: Image
+    image: Image!
     title: String!
     description: String!
     mainCategory: String!
@@ -22,9 +22,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addItem(imageFile: String!, title: String!, description: String!, mainCategory: String!): Item
-    updateItem(id: ID!, imageFile: String, title: String, description: String, mainCategory: String): Item
-    deleteItem(id: ID!): String
+    addArticle(imageFile: String!, title: String!, description: String!, mainCategory: String!): Item
+    updateArticle(id: ID!, imageFile: String, title: String, description: String, mainCategory: String): Item
+    deleteArticle(id: ID!): String
   }
 `;
 
