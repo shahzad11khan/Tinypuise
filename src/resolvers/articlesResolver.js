@@ -26,8 +26,8 @@ const resolvers = {
                 };
             } else {
                 try {
-                    // const uploadResult = await uploadToCloudinary(image);
-                    const uploadResult = await updateimage(image);
+                    // const uploadResult = await uploadToCloudinary(imageFile);
+                    const uploadResult = await updateimage(imageFile);
                     image = {
                         url: uploadResult.secure_url, // Image URL from Cloudinary
                         publicId: uploadResult.public_id, // Public ID for Cloudinary image
