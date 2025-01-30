@@ -192,5 +192,24 @@ mutation {
   }
 }
 
+mutation {
+  addItem(
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmCy16nhIbV3pI1qLYHMJKwbH2458oiC9EmA&s",
+    title: "New Article",
+    description: "This is a sample article.",
+    ["For You", "General Tips", "Nutrition","Health","Fitness","Diet","Vitamins","Supplements"]
+    pass this indexes one by one instead of Tech
+    mainCategory: "Tech"
+  ) {
+    id
+    title
+    description
+    image {
+      url
+      publicId
+    }
+    mainCategory
+  }
+}
 
 
