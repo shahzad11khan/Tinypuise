@@ -213,3 +213,16 @@ mutation {
 }
 
 
+query {
+  getItems {
+    id
+    title
+    description
+    image{
+      url,publicId
+    }
+    mainCategory
+  }
+}
+
+
