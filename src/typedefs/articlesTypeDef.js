@@ -22,8 +22,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addItem(image: String!, title: String!, description: String!, mainCategory: String!): Item
-    updateItem(id: ID!, image: String, title: String, description: String, mainCategory: String): Item
+    addItem(imageFile: String!, title: String!, description: String!, mainCategory: String!): Item
+    updateItem(id: ID!, imageFile: String, title: String, description: String, mainCategory: String): Item
     deleteItem(id: ID!): String
   }
 `;

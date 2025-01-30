@@ -17,9 +17,9 @@ const resolvers = {
 
     Mutation: {
         // Add new item
-        addItem: async (_, { image, title, description, mainCategory }) => {
+        addItem: async (_, { imageFile, title, description, mainCategory }) => {
             let image = {};
-            if (!image) {
+            if (!imageFile) {
                 image = {
                     url: "https://static.thenounproject.com/png/1559144-200.png", // Image URL from Cloudinary
                     publicId: "1559144-200", // Public ID for Cloudinary image
@@ -42,13 +42,13 @@ const resolvers = {
         },
 
         // Update existing item
-        updateItem: async (_, { id, image, title, description, mainCategory }) => {
+        updateItem: async (_, { id, imageFile, title, description, mainCategory }) => {
             const user = await Item.findById(id);
             const updates = {};
             if (title) updates.title = title;
             if (description) updates.description = description;
             if (mainCategory) updates.mainCategory = mainCategory;
-            if (image) {
+            if (imageFile) {
                 // Delete the old image from Cloudinary (if exists)
                 if (user.image && user.image.publicId) {
                   try {
