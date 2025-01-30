@@ -1,7 +1,6 @@
 const Item = require("../models/article");
 const { uploadToCloudinary } = require('../middleware/uploadToCloudinary');
 const { deleteFromCloudinary } = require('../middleware/deleteFromCloudinary');
-const { addResolversToSchema } = require("@graphql-tools/schema");
 
 const resolvers = {
     Query: {
