@@ -24,7 +24,11 @@ const userSchema = new mongoose.Schema({
       type: String, // Cloudinary public ID for the image
       required: false,
     },
-  }
+  },
+  refreshToken: {
+    type: String,
+    default: null,
+  },
 });
 
 // Hash password before saving to the database
@@ -36,6 +40,17 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// Generate Refresh Token
+userSchema.methods.generateRefreshToken = function () {
+  const token = crypto.randomBytes(32).toString('hex'); // Generate a secure token
+  this.refreshToken = token;
+  return token;
+};
+
+// Clear Refresh Token
+userSchema.methods.clearRefreshToken = function () {
+  this.refreshToken = null;
+};
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
