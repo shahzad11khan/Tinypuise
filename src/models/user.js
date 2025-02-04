@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  refreshOTP: {
+    type: String,
+    default: null,
+  },
 });
 
 // Hash password before saving to the database
@@ -47,9 +51,19 @@ userSchema.methods.generateRefreshToken = function () {
   return token;
 };
 
+userSchema.methods.generateRefreshOtp = function () {
+  const OTP = Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit random number
+  this.refreshOTP= OTP.toString(); // Store as a string if needed
+  return this.refreshOTP;
+};
+
 // Clear Refresh Token
 userSchema.methods.clearRefreshToken = function () {
   this.refreshToken = null;
+};
+// Clear Refresh OTP
+userSchema.methods.clearRefreshOtp = function () {
+  this.refreshPTO = null;
 };
 const User = mongoose.model('User', userSchema);
 
