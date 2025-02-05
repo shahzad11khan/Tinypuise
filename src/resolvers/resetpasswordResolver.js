@@ -27,7 +27,7 @@ const resolvers ={
           try {
             const user = await User.findOne({ email });
             if (!user) {
-              return res.status(404).json({ message: 'User not found' });
+              throw new Error('User not found');
             }
         
             // Generate a reset token
@@ -57,35 +57,35 @@ const resolvers ={
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 console.error('Email Sending Error:', error);
-                return res.status(500).json({ message: 'Failed to send email', error: error.message });
+                throw new Error('Failed to send email');
               }
               console.log('Email sent:', info.response);
-              res.status(200).json({ message: 'Password reset link sent to your email', email, resetURL });
             });
           } catch (error) {
             console.error('Server Error:', error);
-            res.status(500).json({ message: 'Server error', error: error.message });
-          }
+            throw new Error('Failed to send email');          }
           },
           resetPassword: async (_, { token,resetOTP, newPassword, confirmPassword }) => {
             try {
               const user = await User.findOne({ refreshToken: token });
              const refreshPTO = await User.findOne({ refreshOTP: resetOTP });
            if(!token ){
-               return res.status(400).json({ message: 'Provide Token' });
+               throw new Error('Provide Token');
            }
              if (!user) {
-               return res.status(400).json({ message: 'Invalid or expired token' });
+               throw new Error('PInvalid or expired token');
              }
          
              if(!refreshPTO){
-               return res.status(400).json({ message: 'Invalid OTP' });
+               throw new Error('Invalid OTP');
+
              }
            if(!resetOTP ){
-               return res.status(400).json({ message: 'Provide ResetOTP' });
+               throw new Error('Provide ResetOTP');
            }
              if (newPassword !== confirmPassword) {
-               return res.status(400).json({ message: 'Passwords do not match' });
+               throw new Error('Passwords do not match');
+
              }
              // Find the user by the refresh token
            
@@ -98,9 +98,10 @@ const resolvers ={
              user.refreshOTP = null;
              await user.save();
          
-             res.status(200).json({ message: 'Password reset successfully'});
+            //  res.status(200).json({ message: 'Password reset successfully'});
            } catch (error) {
-             res.status(500).json({ message: 'Server error', error: error.message });
+             throw new Error('error');
+
            }
           },
     
